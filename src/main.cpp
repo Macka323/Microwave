@@ -11,13 +11,13 @@ unsigned long timerDelay = 5000;
 
 TaskHandle_t Task1;
 
-#define RED_TEMP_SENSOR_PIN 14
-#define BLACK_TEMP_SENSOR_PIN 27
-#define DOR_BUTTON_PIN 12
+#define RED_TEMP_SENSOR_PIN 33
+#define BLACK_TEMP_SENSOR_PIN 32
+#define DOR_BUTTON_PIN 35
 
-#define HEATER_PIN_1 33
-#define HEATER_PIN_2 25
-#define FAN_PIN 26
+#define HEATER_PIN_1 27
+#define HEATER_PIN_2 26
+#define FAN_PIN 25
 
 int targetTemp = 20;
 
@@ -30,6 +30,11 @@ void SetHeater(bool state)
 bool GetDor()
 {
   return digitalRead(DOR_BUTTON_PIN);
+}
+
+bool GetFan()
+{
+  return digitalRead(FAN_PIN);
 }
 
 bool GetHeater()
@@ -60,7 +65,8 @@ void SetTargetTemp(int temp)
 }
 
 void BtSerialCode(void *parameter)
-{
+{ 
+  vTaskDelay(50000);
 }
 
 void setup()
@@ -106,7 +112,7 @@ void loop()
     if (WiFi.status() == WL_CONNECTED)
     {
       HTTPClient http;
-      String serverPath = serverName + "?temperature=24.37";
+      String serverPath = serverName + "?tragertTemp="+targetTemp+"&currentTemp="+GetTemp()+"&isDorOpened"+GetDor()+"&isHeaterOn"+GetHeater()+"&isFanOn"+GetFan();
       // Your Domain name with URL path or IP address with path
       http.begin(serverPath.c_str());
 
