@@ -7,7 +7,7 @@ const char *password = "modecom32";
 // Domain name with URL path or IP address with path
 String serverName = "http://192.168.10.12:1880/update-sensor";
 unsigned long lastTime = 0;
-unsigned long timerDelay = 5000;
+unsigned long timerDelay = 50;
 
 TaskHandle_t Task1;
 
@@ -47,7 +47,7 @@ void SetFan(bool state)
   digitalWrite(FAN_PIN, !state);
 }
 
-int GetTemp()
+float GetTemp()
 {
   int red = analogRead(RED_TEMP_SENSOR_PIN);
   int black = analogRead(RED_TEMP_SENSOR_PIN);
@@ -64,10 +64,6 @@ void SetTargetTemp(int temp)
   targetTemp = temp;
 }
 
-void BtSerialCode(void *parameter)
-{ 
-  vTaskDelay(50000);
-}
 
 void setup()
 {
@@ -82,15 +78,6 @@ void setup()
 
   SetFan(false);
   SetHeater(false);
-
-  xTaskCreatePinnedToCore(
-      BtSerialCode, /* Function to implement the task */
-      "Task1",      /* Name of the task */
-      10000,        /* Stack size in words */
-      NULL,         /* Task input parameter */
-      0,            /* Priority of the task */
-      &Task1,       /* Task handle. */
-      0);           /* Core where the atask should run */
 
   WiFi.begin(ssid, password);
   Serial.begin(115200);
@@ -112,7 +99,7 @@ void loop()
     if (WiFi.status() == WL_CONNECTED)
     {
       HTTPClient http;
-      String serverPath = serverName + "?tragertTemp="+targetTemp+"&currentTemp="+GetTemp()+"&isDorOpened"+GetDor()+"&isHeaterOn"+GetHeater()+"&isFanOn"+GetFan();
+      String serverPath = serverName + "?tragertTemp="+targetTemp+"&currentTemp="+GetTemp()+"&isDorOpened="+GetDor()+"&isHeaterOn="+GetHeater()+"&isFanOn="+GetFan();
       // Your Domain name with URL path or IP address with path
       http.begin(serverPath.c_str());
 
