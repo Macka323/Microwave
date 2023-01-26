@@ -1,13 +1,20 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 const char *ssid = "dd-wrt";
 const char *password = "modecom32";
 // Domain name with URL path or IP address with path
 String serverName = "http://192.168.10.12:1880/update-sensor";
+
+// wifi post and get delay
 unsigned long lastTime = 0;
 unsigned long timerDelay = 50;
+
+// heater on/on delay, this is becouse the the hater heats up too fast and to slow it down
+unsigned long lastTime2 = 0;
+unsigned long timerDelay2 = 2000;
 
 TaskHandle_t Task1;
 
@@ -20,6 +27,7 @@ TaskHandle_t Task1;
 #define FAN_PIN 25
 
 int targetTemp = 20;
+bool heating = false;
 
 void SetHeater(bool state)
 {
@@ -64,6 +72,32 @@ void SetTargetTemp(int temp)
   targetTemp = temp;
 }
 
+void Task1code(void *parameter)
+{
+  for (;;)
+  {
+    if (heating)
+    {
+      if ((micros() - lastTime) > timerDelay)
+      {
+        if (targetTemp > GetTemp())
+        {
+          SetHeater(true);
+          SetFan(true);
+          heating = true;
+        }
+        else
+        {
+          SetHeater(false);
+          SetFan(true);
+          heating = false;
+        }
+
+        lastTime = micros();
+      }
+    }
+  }
+}
 
 void setup()
 {
@@ -78,6 +112,15 @@ void setup()
 
   SetFan(false);
   SetHeater(false);
+
+  xTaskCreatePinnedToCore(
+      Task1code, /* Function to implement the task */
+      "Task1",   /* Name of the task */
+      10000,     /* Stack size in words */
+      NULL,      /* Task input parameter */
+      0,         /* Priority of the task */
+      &Task1,    /* Task handle. */
+      0);        /* Core where the task should run */
 
   WiFi.begin(ssid, password);
   Serial.begin(115200);
@@ -99,7 +142,7 @@ void loop()
     if (WiFi.status() == WL_CONNECTED)
     {
       HTTPClient http;
-      String serverPath = serverName + "?tragertTemp="+targetTemp+"&currentTemp="+GetTemp()+"&isDorOpened="+GetDor()+"&isHeaterOn="+GetHeater()+"&isFanOn="+GetFan();
+      String serverPath = serverName + "?tragertTemp=" + targetTemp + "&currentTemp=" + GetTemp() + "&heating=" + heating + "&isDorOpened=" + GetDor() + "&isHeaterOn=" + GetHeater() + "&isFanOn=" + GetFan();
       // Your Domain name with URL path or IP address with path
       http.begin(serverPath.c_str());
 
@@ -111,6 +154,24 @@ void loop()
         Serial.print("HTTP Response code: ");
         Serial.println(httpResponseCode);
         String payload = http.getString();
+        if (payload.length() > 0)
+        {
+
+          StaticJsonDocument<64> doc;
+
+          DeserializationError error = deserializeJson(doc, payload);
+
+          if (error)
+          {
+            Serial.print("deserializeJson() failed: ");
+            Serial.println(error.c_str());
+            return;
+          }
+
+          heating = doc["heating"];       // true
+          targetTemp = doc["targetTemp"]; // 50.3
+          Serial.print("Deserializing ||| ");
+        }
         Serial.println(payload);
       }
       else
@@ -127,6 +188,5 @@ void loop()
     }
     lastTime = millis();
     SetFan(true);
-    delay(100);
   }
 }
