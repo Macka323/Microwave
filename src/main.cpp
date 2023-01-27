@@ -188,6 +188,5 @@ void loop()
     }
     lastTime = millis();
     SetFan(true);
-    delay(1000);
   }
 }
