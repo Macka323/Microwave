@@ -18,6 +18,8 @@ unsigned long timerDelay2 = 2000;
 
 TaskHandle_t Task1;
 
+StaticJsonDocument<256> doc;
+
 #define RED_TEMP_SENSOR_PIN 33
 #define BLACK_TEMP_SENSOR_PIN 32
 #define DOR_BUTTON_PIN 35
@@ -157,8 +159,6 @@ void loop()
         if (payload.length() > 0)
         {
 
-          StaticJsonDocument<64> doc;
-
           DeserializationError error = deserializeJson(doc, payload);
 
           if (error)
@@ -188,5 +188,6 @@ void loop()
     }
     lastTime = millis();
     SetFan(true);
+    delay(1000);
   }
 }
