@@ -1,0 +1,8 @@
+{
+    "projects": {
+        "Microwave": {
+            "credentialSecret": false
+        }
+    },
+    "activeProject": "Microwave"
+}
