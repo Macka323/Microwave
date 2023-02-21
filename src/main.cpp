@@ -6,7 +6,7 @@
 const char *ssid = "dd-wrt";
 const char *password = "modecom32";
 // Domain name with URL path or IP address with path
-String serverName = "http://192.168.10.12:1880/update-sensor";
+String serverName = "http://192.168.1.99:1880/update-sensor";
 
 // wifi post and get delay
 unsigned long lastTime = 0;
@@ -21,12 +21,12 @@ TaskHandle_t Task1;
 StaticJsonDocument<256> doc;
 
 #define RED_TEMP_SENSOR_PIN 33
-#define BLACK_TEMP_SENSOR_PIN 32
-#define DOR_BUTTON_PIN 35
+#define BLACK_TEMP_SENSOR_PIN 35
+#define DOR_BUTTON_PIN 32
 
-#define HEATER_PIN_1 27
+#define HEATER_PIN_1 25
 #define HEATER_PIN_2 26
-#define FAN_PIN 25
+#define FAN_PIN 27
 
 int targetTemp = 20;
 bool heating = false;
@@ -39,17 +39,17 @@ void SetHeater(bool state)
 
 bool GetDor()
 {
-  return digitalRead(DOR_BUTTON_PIN);
+  return !digitalRead(DOR_BUTTON_PIN);
 }
 
 bool GetFan()
 {
-  return digitalRead(FAN_PIN);
+  return !digitalRead(FAN_PIN);
 }
 
 bool GetHeater()
 {
-  return digitalRead(HEATER_PIN_1) && digitalRead(HEATER_PIN_2);
+  return !(digitalRead(HEATER_PIN_1) && digitalRead(HEATER_PIN_2));
 }
 
 void SetFan(bool state)
