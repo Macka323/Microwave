@@ -1,0 +1,14 @@
+{
+    "name": "node-red-project",
+    "description": "A Node-RED Project",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "node-red-contrib-dashbored": "~1.0.1",
+        "node-red-contrib-heater-controller": "~3.0.2",
+        "node-red-contrib-ui-countdown-timer-switch": "~1.4.1",
+        "node-red-contrib-ui-reef": "~1.0.2",
+        "node-red-contrib-ui-thermostat": "~1.0.0",
+        "node-red-dashboard": "~3.3.1"
+    }
+}
