@@ -8,12 +8,12 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "C:/Users/marti/Documents/PlatformIO/Projects/Microwave/include",
-                "C:/Users/marti/Documents/PlatformIO/Projects/Microwave/src",
+                "c:/Users/marti/Desktop/Microwave/include",
+                "c:/Users/marti/Desktop/Microwave/src",
                 "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src",
                 "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
-                "C:/Users/marti/Documents/PlatformIO/Projects/Microwave/.pio/libdeps/esp32dev/ArduinoJson/src",
+                "c:/Users/marti/Desktop/Microwave/.pio/libdeps/esp32dev/ArduinoJson/src",
                 "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
                 "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include",
                 "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos",
@@ -240,12 +240,12 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "C:/Users/marti/Documents/PlatformIO/Projects/Microwave/include",
-                    "C:/Users/marti/Documents/PlatformIO/Projects/Microwave/src",
+                    "c:/Users/marti/Desktop/Microwave/include",
+                    "c:/Users/marti/Desktop/Microwave/src",
                     "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/libraries/HTTPClient/src",
                     "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
-                    "C:/Users/marti/Documents/PlatformIO/Projects/Microwave/.pio/libdeps/esp32dev/ArduinoJson/src",
+                    "c:/Users/marti/Desktop/Microwave/.pio/libdeps/esp32dev/ArduinoJson/src",
                     "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
                     "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include",
                     "C:/Users/marti/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos",

@@ -21,8 +21,8 @@ TaskHandle_t Task1;
 StaticJsonDocument<256> doc;
 
 #define RED_TEMP_SENSOR_PIN 33
-#define BLACK_TEMP_SENSOR_PIN 35
-#define DOR_BUTTON_PIN 32
+#define BLACK_TEMP_SENSOR_PIN 32
+#define DOR_BUTTON_PIN 35
 
 #define HEATER_PIN_1 25
 #define HEATER_PIN_2 26
