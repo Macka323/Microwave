@@ -60,7 +60,7 @@ void SetFan(bool state)
 float GetTemp()
 {
   int red = analogRead(RED_TEMP_SENSOR_PIN);
-  int black = analogRead(RED_TEMP_SENSOR_PIN);
+  int black = analogRead(BLACK_TEMP_SENSOR_PIN);
   int average = (red + black) / 2;
 
   // convert from sensor readings to temperature
