@@ -3,10 +3,10 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
-const char *ssid = "dd-wrt";
+const char *ssid = "dd-wrt phone";
 const char *password = "modecom32";
 // Domain name with URL path or IP address with path
-String serverName = "http://192.168.1.99:1880/update-sensor";
+String serverName = "http://192.168.185.209:1880/update-sensor";
 
 // wifi post and get delay
 unsigned long lastTime = 0;
@@ -30,6 +30,7 @@ StaticJsonDocument<256> doc;
 
 int targetTemp = 20;
 bool heating = false;
+bool GlobalHeating = false;
 
 void SetHeater(bool state)
 {
@@ -78,25 +79,36 @@ void Task1code(void *parameter)
 {
   for (;;)
   {
-    if (heating)
+    if (GlobalHeating)
     {
-      if ((micros() - lastTime) > timerDelay)
+      if (GetDor())
       {
-        if (targetTemp > GetTemp())
+        SetHeater(false);
+        SetFan(false);
+      }
+      else
+      {
+        if (targetTemp-2 > GetTemp())
         {
           SetHeater(true);
           SetFan(true);
-          heating = true;
+          vTaskDelay(500);
+          SetHeater(false);
+          SetFan(true);
+          vTaskDelay(2000);
         }
         else
         {
           SetHeater(false);
           SetFan(true);
-          heating = false;
+          vTaskDelay(1000);
         }
-
-        lastTime = micros();
       }
+    }
+    else
+    {
+      SetHeater(false);
+      SetFan(false);
     }
   }
 }
@@ -132,7 +144,6 @@ void setup()
     delay(500);
     Serial.print(".");
   }
-  Serial.println("");
   Serial.print("Connected to WiFi network with IP Address: ");
   Serial.println(WiFi.localIP());
 }
@@ -144,7 +155,7 @@ void loop()
     if (WiFi.status() == WL_CONNECTED)
     {
       HTTPClient http;
-      String serverPath = serverName + "?tragertTemp=" + targetTemp + "&currentTemp=" + GetTemp() + "&heating=" + heating + "&isDorOpened=" + GetDor() + "&isHeaterOn=" + GetHeater() + "&isFanOn=" + GetFan();
+      String serverPath = serverName + "?tragetTemp=" + targetTemp + "&currentTemp=" + GetTemp() + "&heating=" + GlobalHeating + "&isDorOpened=" + GetDor() + "&isHeaterOn=" + GetHeater() + "&isFanOn=" + GetFan();
       // Your Domain name with URL path or IP address with path
       http.begin(serverPath.c_str());
 
@@ -153,8 +164,8 @@ void loop()
 
       if (httpResponseCode > 0)
       {
-        Serial.print("HTTP Response code: ");
-        Serial.println(httpResponseCode);
+        // Serial.print("HTTP Response code: ");
+        // Serial.println(httpResponseCode);
         String payload = http.getString();
         if (payload.length() > 0)
         {
@@ -168,11 +179,11 @@ void loop()
             return;
           }
 
-          heating = doc["heating"];       // true
+          GlobalHeating = doc["heating"]; // true
           targetTemp = doc["targetTemp"]; // 50.3
           Serial.print("Deserializing ||| ");
         }
-        Serial.println(payload);
+        Serial.println("payload: " + payload);
       }
       else
       {
@@ -187,6 +198,5 @@ void loop()
       Serial.println("WiFi Disconnected");
     }
     lastTime = millis();
-    SetFan(true);
   }
 }
